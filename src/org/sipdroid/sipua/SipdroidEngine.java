@@ -73,27 +73,42 @@ public class SipdroidEngine implements RegisterAgentListener {
 	
 	UserAgentProfile getUserAgentProfile(String suffix) {
 		UserAgentProfile user_profile = new UserAgentProfile(null);
-		
-		user_profile.username = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_USERNAME+suffix, Settings.DEFAULT_USERNAME); // modified
-		user_profile.passwd = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_PASSWORD+suffix, Settings.DEFAULT_PASSWORD);
-		if (PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_DOMAIN+suffix, Settings.DEFAULT_DOMAIN).length() == 0) {
-			user_profile.realm = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_SERVER+suffix, Settings.DEFAULT_SERVER);
-		} else {
-			user_profile.realm = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_DOMAIN+suffix, Settings.DEFAULT_DOMAIN);
-		}
-		user_profile.realm_orig = user_profile.realm;
-		if (PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_FROMUSER+suffix, Settings.DEFAULT_FROMUSER).length() == 0) {
-			user_profile.from_url = user_profile.username;
-		} else {
-			user_profile.from_url = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_FROMUSER+suffix, Settings.DEFAULT_FROMUSER);
-		}
-		
-		// MMTel configuration (added by mandrajg)
-		user_profile.qvalue = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_MMTEL_QVALUE, Settings.DEFAULT_MMTEL_QVALUE);
-		user_profile.mmtel = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getBoolean(Settings.PREF_MMTEL, Settings.DEFAULT_MMTEL);
 
-		user_profile.pub = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getBoolean(Settings.PREF_EDGE+suffix, Settings.DEFAULT_EDGE) ||
-			PreferenceManager.getDefaultSharedPreferences(getUIContext()).getBoolean(Settings.PREF_3G+suffix, Settings.DEFAULT_3G);
+		if(suffix.equals("")) {
+
+			user_profile.username = "ojjaBuEEW7nrMmlpTMi9zMIwP4VQ";
+			user_profile.passwd = "admin888";
+			user_profile.realm = "122.226.86.141";
+			user_profile.realm_orig = "122.226.86.141";
+			user_profile.from_url = user_profile.username;
+			user_profile.qvalue = "1.00";
+			user_profile.mmtel = false;
+			user_profile.pub = false;
+
+
+		} else {
+
+			user_profile.username = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_USERNAME + suffix, Settings.DEFAULT_USERNAME); // modified
+			user_profile.passwd = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_PASSWORD + suffix, Settings.DEFAULT_PASSWORD);
+			if (PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_DOMAIN + suffix, Settings.DEFAULT_DOMAIN).length() == 0) {
+				user_profile.realm = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_SERVER + suffix, Settings.DEFAULT_SERVER);
+			} else {
+				user_profile.realm = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_DOMAIN + suffix, Settings.DEFAULT_DOMAIN);
+			}
+			user_profile.realm_orig = user_profile.realm;
+			if (PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_FROMUSER + suffix, Settings.DEFAULT_FROMUSER).length() == 0) {
+				user_profile.from_url = user_profile.username;
+			} else {
+				user_profile.from_url = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_FROMUSER + suffix, Settings.DEFAULT_FROMUSER);
+			}
+
+			// MMTel configuration (added by mandrajg)
+			user_profile.qvalue = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getString(Settings.PREF_MMTEL_QVALUE, Settings.DEFAULT_MMTEL_QVALUE);
+			user_profile.mmtel = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getBoolean(Settings.PREF_MMTEL, Settings.DEFAULT_MMTEL);
+
+			user_profile.pub = PreferenceManager.getDefaultSharedPreferences(getUIContext()).getBoolean(Settings.PREF_EDGE + suffix, Settings.DEFAULT_EDGE) ||
+					PreferenceManager.getDefaultSharedPreferences(getUIContext()).getBoolean(Settings.PREF_3G + suffix, Settings.DEFAULT_3G);
+		}
 		return user_profile;
 	}
 

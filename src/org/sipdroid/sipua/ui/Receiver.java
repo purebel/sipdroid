@@ -72,9 +72,11 @@ import org.sipdroid.media.RtpStreamSender;
 import org.sipdroid.sipua.*;
 import org.sipdroid.sipua.phone.Call;
 import org.sipdroid.sipua.phone.Connection;
+import org.sipdroid.sipua.ui2.InCallActivity;
 import org.zoolu.sip.provider.SipProvider;
 
 	public class Receiver extends BroadcastReceiver {
+		private static final String TAG = "[Jason]" + Receiver.class.getName();
 
 		final static String ACTION_PHONE_STATE_CHANGED = "android.intent.action.PHONE_STATE";
 		final static String ACTION_SIGNAL_STRENGTH_CHANGED = "android.intent.action.SIG_STR";
@@ -156,6 +158,7 @@ import org.zoolu.sip.provider.SipProvider;
 		static android.os.Vibrator v;
 		
 		public static void onState(int state,String caller) {
+			Log.w(TAG, "onState() state:" + state + "-caller:" + caller);
 			if (ccCall == null) {
 		        ccCall = new Call();
 		        ccConn = new Connection();
@@ -163,12 +166,14 @@ import org.zoolu.sip.provider.SipProvider;
 		        ccConn.setCall(ccCall);
 			}
 			if (call_state != state) {
+				Log.w(TAG, "onState() call_state:" + call_state + "-state:" + state);
 				if (state != UserAgent.UA_STATE_IDLE)
 					call_end_reason = -1;
 				call_state = state;
 				switch(call_state)
 				{
 				case UserAgent.UA_STATE_INCOMING_CALL:
+					Log.w(TAG, "onState() call_state:UserAgent.UA_STATE_INCOMING_CALL");
 					enable_wifi(true);
 					RtpStreamReceiver.good = RtpStreamReceiver.lost = RtpStreamReceiver.loss = RtpStreamReceiver.late = 0;
 					RtpStreamReceiver.speakermode = speakermode();
@@ -220,6 +225,7 @@ import org.zoolu.sip.provider.SipProvider;
 		        	Checkin.checkin(true);
 					break;
 				case UserAgent.UA_STATE_OUTGOING_CALL:
+					Log.w(TAG, "onState() call_state:UserAgent.UA_STATE_OUTGOING_CALL");
 					RtpStreamReceiver.good = RtpStreamReceiver.lost = RtpStreamReceiver.loss = RtpStreamReceiver.late = 0;
 					RtpStreamReceiver.speakermode = speakermode();
 					bluetooth = -1;
@@ -236,6 +242,7 @@ import org.zoolu.sip.provider.SipProvider;
 		        	Checkin.checkin(true);
 					break;
 				case UserAgent.UA_STATE_IDLE:
+					Log.w(TAG, "onState() call_state:UserAgent.UA_STATE_IDLE");
 					broadcastCallStateChanged("IDLE", null);
 					onText(CALL_NOTIFICATION, null, 0,0);
 					ccCall.setState(Call.State.DISCONNECTED);
@@ -244,12 +251,14 @@ import org.zoolu.sip.provider.SipProvider;
 					stopRingtone();
 					if (wl != null && wl.isHeld())
 						wl.release();
-			        mContext.startActivity(createIntent(InCallScreen.class));
+//			        mContext.startActivity(createIntent(InCallScreen.class));
+			        mContext.startActivity(createIntent(InCallActivity.class));
 					ccConn.log(ccCall.base);
 					ccConn.date = 0;
 					engine(mContext).listen();
 					break;
 				case UserAgent.UA_STATE_INCALL:
+					Log.w(TAG, "onState() call_state:UserAgent.UA_STATE_INCALL");
 					broadcastCallStateChanged("OFFHOOK", null);
 					if (ccCall.base == 0) {
 						ccCall.base = SystemClock.elapsedRealtime();
@@ -259,9 +268,11 @@ import org.zoolu.sip.provider.SipProvider;
 					stopRingtone();
 					if (wl != null && wl.isHeld())
 						wl.release();
-			        mContext.startActivity(createIntent(InCallScreen.class));
+//			        mContext.startActivity(createIntent(InCallScreen.class));
+			        mContext.startActivity(createIntent(InCallActivity.class));
 					break;
 				case UserAgent.UA_STATE_HOLD:
+					Log.w(TAG, "onState() call_state:UserAgent.UA_STATE_HOLD");
 					onText(CALL_NOTIFICATION, mContext.getString(R.string.card_title_on_hold), android.R.drawable.stat_sys_phone_call_on_hold,ccCall.base);
 					ccCall.setState(Call.State.HOLDING);
 			        if (InCallScreen.started && (pstn_state == null || !pstn_state.equals("RINGING"))) mContext.startActivity(createIntent(InCallScreen.class));
@@ -506,6 +517,7 @@ import org.zoolu.sip.provider.SipProvider;
 		static boolean was_playing;
 		
 		static void broadcastCallStateChanged(String state,String number) {
+			Log.w(TAG, "broadcastCallStateChanged() state:" + state + "-number:" + number);
 			if (state == null) {
 				state = laststate;
 				number = lastnumber;
@@ -622,6 +634,7 @@ import org.zoolu.sip.provider.SipProvider;
 		}
 
 		public static void progress() {
+			Log.w(TAG, "progress()");
 			if (call_state == UserAgent.UA_STATE_IDLE) return;
 			int mode = RtpStreamReceiver.speakermode;
 			if (mode == -1)
@@ -732,6 +745,7 @@ import org.zoolu.sip.provider.SipProvider;
 	    @Override
 		public void onReceive(Context context, Intent intent) {
 	        String intentAction = intent.getAction();
+			Log.w(TAG, "onReceive() " + intentAction);
 	        if (!Sipdroid.on(context)) return;
         	if (!Sipdroid.release) Log.i("SipUA:",intentAction);
         	if (mContext == null) mContext = context;

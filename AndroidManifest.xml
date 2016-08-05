@@ -42,6 +42,7 @@
 	<uses-feature android:name="android.hardware.wifi" android:required="false"/>
 	<uses-feature android:name="android.hardware.camera" android:required="false"/>
 	<application android:icon="@drawable/icon64" android:label="@string/app_name">
+		<!--
         <activity android:name="org.sipdroid.sipua.ui.Sipdroid" android:label="@string/app_name" android:launchMode="singleInstance"
         	android:configChanges="orientation|keyboardHidden">
             <intent-filter>
@@ -49,6 +50,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+		-->
         <activity android:name="org.sipdroid.sipua.ui.PSTN" android:label="@string/pstn_name"
         	android:icon="@drawable/ic_launcher_phone">
             <intent-filter>
@@ -146,6 +148,21 @@
             </intent-filter>
         </receiver>
        	<service android:name=".ui.RegisterService" android:label="@string/app_name"/>
+
+
+		<!--my own testing ui-->
+		<activity android:name="org.sipdroid.sipua.ui2.DialActivity" android:label="@string/app_name" android:launchMode="singleInstance"
+			android:configChanges="orientation|keyboardHidden">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+
+		<activity android:name="org.sipdroid.sipua.ui2.InCallActivity" android:label="@string/app_name"
+			android:excludeFromRecents="true" android:taskAffinity=""
+			android:launchMode="singleInstance">
+		</activity>
     </application>
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"></uses-permission>
